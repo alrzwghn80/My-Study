@@ -1,0 +1,63 @@
+/*
+ * ============================================================
+ * BASE STYLES
+ * Global reset, body, and element defaults.
+ * ============================================================
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-base);
+    color: var(--ink);
+    direction: rtl;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+
+    /* Ambient background glows */
+    background-image:
+        radial-gradient(circle at 15% 50%, rgba(226, 232, 240, 0.5), transparent 50%),
+        radial-gradient(circle at 85% 30%, rgba(93, 13, 24, 0.06), transparent 50%),
+        radial-gradient(circle at 50% 80%, rgba(26, 54, 93, 0.04), transparent 50%);
+    background-size: 100vw 100vh;
+    background-attachment: fixed;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+}
+
+ul { list-style: none; }
+
+/* Gradient text utility used on the teacher name and key phrases */
+.teacher-underline {
+    position: relative;
+    display: inline-block;
+    z-index: 1;
+    white-space: nowrap;
+    background: linear-gradient(120deg, var(--primary-navy), var(--accent-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* Shared page wrapper */
+.main-container {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}

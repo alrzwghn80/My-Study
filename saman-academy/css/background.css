@@ -1,0 +1,64 @@
+/*
+ * ============================================================
+ * BACKGROUND: INTERACTIVE GERMAN PATTERN GRID
+ * The full-screen mouse-proximity effect layer.
+ * ============================================================
+ */
+
+.mouse-grid-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    background-color: transparent;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    overflow: hidden;
+}
+
+/* Each flag / text item wrapper */
+.pattern-wrapper {
+    position: absolute;
+    will-change: transform;
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* German flag element */
+.de-flag {
+    background: linear-gradient(
+        to bottom,
+        #1D1D1F 33.3%,
+        #E3000F 33.3%, #E3000F 66.6%,
+        #FFCE00 66.6%
+    );
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 1.5px;
+    filter: grayscale(100%) contrast(40%) brightness(130%);
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    transition: filter 0.45s ease, box-shadow 0.45s ease, border-color 0.45s ease, opacity 0.45s ease;
+    will-change: opacity, filter;
+}
+.de-flag.hovered {
+    filter: grayscale(0%) saturate(150%) contrast(110%) brightness(100%);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.06);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+/* German text / symbol element */
+.de-text {
+    font-family: var(--font-display-fa), var(--font-body);
+    font-weight: 700;
+    color: var(--ink);
+    transition: color 0.45s ease, opacity 0.45s ease, text-shadow 0.45s ease;
+    will-change: opacity, color;
+}
+.de-text.hovered {
+    color: var(--accent-gold);
+    text-shadow: 0 2px 10px rgba(93, 13, 24, 0.3);
+}

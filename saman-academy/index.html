@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آکادمی تخصصی آلمانی سامان | Saman German Academy</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;600&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- GSAP & ScrollTrigger -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Stylesheets (load order: tokens → base → components → layout → responsive) -->
+    <link rel="stylesheet" href="css/tokens.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/sections.css">
+    <link rel="stylesheet" href="css/footer.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- ================================================================
+         MOBILE OVERLAY & BOTTOM SHEET
+         ================================================================ -->
+    <div class="mobile-sheet-overlay" id="mobileSheetOverlay"></div>
+
+    <div class="mobile-bottom-sheet" id="mobileBottomSheet">
+        <div class="sheet-handle"></div>
+        <a href="#about"   class="sheet-link">درباره ما</a>
+        <a href="#contact" class="sheet-link">تماس با ما</a>
+        <a href="#login"   class="sheet-btn">ورود / ثبت‌نام</a>
+    </div>
+
+    <!-- ================================================================
+         BACKGROUND: INTERACTIVE GERMAN PATTERN GRID
+         ================================================================ -->
+    <div class="mouse-grid-bg" id="mouseGridBg" aria-hidden="true"></div>
+
+    <!-- ================================================================
+         HEADER
+         ================================================================ -->
+    <header class="site-header">
+        <div class="header-right">
+            <div class="logo-container">
+                <span class="logo-main">آکادمی تخصصی آلمانی سامان</span>
+                <span class="logo-sub">Saman German Academy</span>
+            </div>
+        </div>
+
+        <div class="header-left">
+            <nav class="main-nav" aria-label="Main navigation">
+                <ul>
+                    <li><a href="#about"   class="nav-link">درباره ما</a></li>
+                    <li><a href="#contact" class="nav-link">تماس با ما</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <button class="btn-cta" type="button">ورود / ثبت‌نام</button>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="باز کردن منو" aria-expanded="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <line x1="4" y1="12" x2="20" y2="12"></line>
+                    <line x1="4" y1="6"  x2="20" y2="6"></line>
+                    <line x1="4" y1="18" x2="20" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <!-- ================================================================
+         MAIN CONTENT
+         ================================================================ -->
+    <main class="main-container">
+
+        <!-- HERO SECTION
+             The 250vh scroll track pins the hero section while the card
+             transformation plays out. On ≤991px the track collapses to
+             'height: auto' and the animation is disabled via GSAP matchMedia.
+        -->
+        <div class="hero-scroll-track" id="heroPinnedScrollTrack">
+            <section class="hero-section" id="heroTransformationContent" aria-label="Hero">
+
+                <div class="hero-visual-card" id="heroVisualCard">
+
+                    <!-- Text content panel (revealed during scroll) -->
+                    <div class="hero-content-panel" id="heroContentPanel">
+                        <h1 class="hero-title">
+                            آموزش زبان آلمانی با <span class="teacher-underline">سامان شهرکی</span>
+                        </h1>
+                        <p class="hero-description">
+                            بیش از ۱۵ هزار زبان‌آموز به آکادمی سامان شهرکی اعتماد کرده‌اند.
+                            با بیش از ۷ سال سابقه تخصصی آموزش زبان آلمانی و هزاران قبولی موفق در
+                            <span class="teacher-underline">آزمون‌های بین‌المللی</span>،
+                            مسیری را طراحی کرده‌ایم که شما را سریع‌تر و مطمئن‌تر به هدفتان می‌رساند.
+                            اعتماد هزاران زبان‌آموز، بزرگ‌ترین سرمایه ماست.
+                        </p>
+                        <div class="hero-actions">
+                            <a href="https://pouriyakhani.com/coursess" class="btn-cta">مشاهده دوره ها</a>
+                            <a href="https://ble.ir/pouriya_khani"      class="btn-cta btn-outline">مشاوره تهیه دوره</a>
+                        </div>
+                    </div>
+
+                    <!-- Background + character image poster -->
+                    <div class="unified-poster-container" id="unifiedPosterContainer">
+                        <img src="assets/images/hero-bg.png"
+                             alt="تصویر پس‌زمینه آکادمی"
+                             class="hero-layer-image hero-bg-layer"
+                             id="heroBgLayer">
+                        <img src="assets/images/hero-character.png"
+                             alt="سامان شهرکی"
+                             class="hero-layer-image hero-character-layer"
+                             id="heroCharacterLayer">
+                    </div>
+
+                </div>
+            </section>
+        </div><!-- /hero-scroll-track -->
+
+
+        <!-- CINEMATIC SCROLL SECTION
+             Benefit tags revealed via GSAP clip-path animation as user scrolls.
+        -->
+        <div id="cinematic-wrapper">
+
+            <img src="assets/images/icon-left.png"
+                 alt=""
+                 class="glass-3d-icon left-icon"
+                 aria-hidden="true">
+            <img src="assets/images/icon-right.png"
+                 alt=""
+                 class="glass-3d-icon right-icon"
+                 aria-hidden="true">
+
+            <section class="benefit-section" aria-label="مزایا">
+                <div class="container">
+                    <div class="title-group">
+
+                        <div class="clip-title-wrapper" style="transform: rotate(-4.5deg);">
+                            <h2 class="clip-title theme-blue">
+                                <span class="ribbon-attachment top-right"></span>
+                                <span class="ribbon-attachment top-left"></span>
+                                <span class="ribbon-attachment bottom-right"></span>
+                                <span class="ribbon-attachment bottom-left"></span>
+                                جزوه ی انلاین و زنده
+                            </h2>
+                        </div>
+
+                        <div class="clip-title-wrapper" style="transform: rotate(3.5deg);">
+                            <h2 class="clip-title theme-red">
+                                <span class="ribbon-attachment top-right"></span>
+                                <span class="ribbon-attachment top-left"></span>
+                                <span class="ribbon-attachment bottom-right"></span>
+                                <span class="ribbon-attachment bottom-left"></span>
+                                دسترسی کامل
+                            </h2>
+                        </div>
+
+                        <div class="clip-title-wrapper" style="transform: rotate(-5.5deg);">
+                            <h2 class="clip-title theme-green">
+                                <span class="ribbon-attachment top-right"></span>
+                                <span class="ribbon-attachment top-left"></span>
+                                <span class="ribbon-attachment bottom-right"></span>
+                                <span class="ribbon-attachment bottom-left"></span>
+                                سامان اینحا سامان آنجا سامان همه جا
+                            </h2>
+                        </div>
+
+                        <div class="clip-title-wrapper" style="transform: rotate(4.5deg);">
+                            <h2 class="clip-title theme-purple">
+                                <span class="ribbon-attachment top-right"></span>
+                                <span class="ribbon-attachment top-left"></span>
+                                <span class="ribbon-attachment bottom-right"></span>
+                                <span class="ribbon-attachment bottom-left"></span>
+                                کلاس فشرده و خصوصی
+                            </h2>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </div><!-- /cinematic-wrapper -->
+
+
+        <!-- FEATURES SECTION (4 hover-reveal cards) -->
+        <section class="features-section" aria-label="ویژگی‌های آکادمی">
+
+            <div class="feature-card">
+                <h3 class="feature-title">برگ برنده ۱</h3>
+                <div class="feature-content">
+                    <div class="feature-line">توضیح کوتاه درباره این مزیت</div>
+                    <div class="feature-line">یک ویژگی مهم و کاربردی</div>
+                    <div class="feature-line">نتیجه یا ارزش اصلی این بخش</div>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">برگ برنده ۲</h3>
+                <div class="feature-content">
+                    <div class="feature-line">توضیح کوتاه درباره این مزیت</div>
+                    <div class="feature-line">یک ویژگی مهم و کاربردی</div>
+                    <div class="feature-line">نتیجه یا ارزش اصلی این بخش</div>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">برگ برنده ۳</h3>
+                <div class="feature-content">
+                    <div class="feature-line">توضیح کوتاه درباره این مزیت</div>
+                    <div class="feature-line">یک ویژگی مهم و کاربردی</div>
+                    <div class="feature-line">نتیجه یا ارزش اصلی این بخش</div>
+                </div>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">برگ برنده ۴</h3>
+                <div class="feature-content">
+                    <div class="feature-line">توضیح کوتاه درباره این مزیت</div>
+                    <div class="feature-line">یک ویژگی مهم و کاربردی</div>
+                    <div class="feature-line">نتیجه یا ارزش اصلی این بخش</div>
+                </div>
+            </div>
+
+        </section><!-- /features-section -->
+
+
+        <!-- INFO CARD 1: Online / In-person Class -->
+        <section class="extra-info-section" aria-label="کلاس حضوری یا آنلاین">
+            <div class="info-card scroll-fade-up online-class-card">
+
+                <div class="info-content-right online-class-content">
+                    <div class="info-header-row">
+                        <h2 class="info-title">کلاس حضوری یا آنلاین ؟؟</h2>
+                        <p class="info-subtitle">یا حتی خود خوان</p>
+                    </div>
+
+                    <div class="info-body-container online-class-body">
+                        <div class="info-body-text-block">
+                            <div class="info-vertical-line" aria-hidden="true"></div>
+                            <p class="info-body-text">
+                                اگه می‌خواین یادگیری آلمانی رو جدی‌تر و منظم‌تر دنبال کنین، کلاس‌های ما می‌تونن<br>
+                                انتخاب مناسبی براتون باشن.<br>
+                                کلاس‌ها به‌صورت حضوری، آنلاین و آفلاین برگزار می‌شن<br>
+                                و آموزش‌ها کامل‌تر و همراه با تمرین و پیگیری بیشتری هستن.
+                            </p>
+                        </div>
+                        <div class="online-class-action">
+                            <button class="btn-dark-reserve" type="button">رزرو جلسه ی رایگان</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="online-kid-wrapper" aria-hidden="true">
+                    <img src="assets/images/kid-online-class.png"
+                         alt=""
+                         class="online-kid-image">
+                </div>
+
+            </div>
+        </section><!-- /online class -->
+
+
+        <!-- PLACEMENT TEST BANNER -->
+        <section class="placement-banner-section" aria-label="تعیین سطح زبان">
+            <a href="page-jadid-shoma.html" target="_blank" class="placement-card scroll-fade-up">
+
+                <div class="placement-content-right">
+                    <img src="assets/images/placement-title.png"
+                         alt="تعیین سطح"
+                         class="placement-title-img">
+                    <p class="placement-subtitle">
+                        این تعیین سطح و کاملا متفاوته که باعث شده به واقعی ترین حالت<br>
+                        سطح زبان آلمانی خودتو رو تعیین کنین
+                    </p>
+                </div>
+
+                <div class="placement-content-left">
+                    <div class="level-img-box">
+                        <img src="assets/images/placement-level-2.png" alt="سطح زبان ۲">
+                    </div>
+                    <div class="level-img-box">
+                        <img src="assets/images/placement-level-1.png" alt="سطح زبان ۱">
+                    </div>
+                </div>
+
+            </a>
+        </section><!-- /placement -->
+
+
+        <!-- INFO CARD 2: Self Study -->
+        <section class="extra-info-section" aria-label="یادگیری خودکار">
+            <div class="info-card scroll-fade-up self-study-card">
+
+                <div class="info-content-right self-study-content">
+                    <div class="info-header-row">
+                        <h2 class="info-title">اشکال نداره اگه نمیخوای هزینه کنی</h2>
+                        <p class="info-subtitle">ما بازم باهاتیم 0 تا 100 آلمانی بصورت Self Study</p>
+                    </div>
+
+                    <div class="info-body-container self-study-body">
+                        <div class="info-body-text-block">
+                            <div class="info-vertical-line" aria-hidden="true"></div>
+                            <p class="info-body-text">
+                                فقط لازمه دوره‌ی متنی و کاملاً رایگانی که براتون آماده کردیم رو مستمر دنبال کنین؛<br>
+                                چه تازه می‌خواین آلمانی رو شروع کنین و می‌خواین اول ببینین<br>
+                                اصلاً این زبان به مزاجتون خوش میاد یا نه،<br>
+                                چه می‌خواین بدون هیچ هزینه‌ای<br>
+                                یادگیری آلمانی رو شروع کنین!
+                            </p>
+                        </div>
+                        <div class="self-study-action">
+                            <button class="btn-dark-reserve" type="button">شروع یادگــــــــــیری</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="kid-image-wrapper" aria-hidden="true">
+                    <img src="assets/images/kid-self-study.png"
+                         alt=""
+                         class="kid-image">
+                </div>
+
+            </div>
+        </section><!-- /self-study -->
+
+    </main><!-- /main-container -->
+
+
+    <!-- ================================================================
+         FOOTER
+         ================================================================ -->
+    <footer class="site-footer" id="about">
+        <div class="footer-container">
+
+            <!-- Tab buttons (right column) -->
+            <div class="footer-right" role="tablist" aria-label="اطلاعات آکادمی">
+                <button class="footer-btn active" data-target="about"   role="tab" aria-selected="true">درباره مـــــــا</button>
+                <button class="footer-btn"         data-target="team"    role="tab" aria-selected="false">معرفی تیم</button>
+                <button class="footer-btn"         data-target="contact" role="tab" aria-selected="false">ارتباط با ما</button>
+            </div>
+
+            <!-- Dynamic info panel (left column) -->
+            <div class="footer-left" id="footerInfoBox" role="tabpanel">
+                <div class="footer-dynamic-text" id="footerDynamicText">
+                    لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با استفاده از طراحان گرافیک است،
+                    چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است، و برای شرایط فعلی
+                    تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف
+                </div>
+
+                <!-- Placeholder boxes for future content (social links, logos, etc.) -->
+                <div class="footer-empty-boxes" aria-hidden="true">
+                    <div class="empty-box"></div>
+                    <div class="empty-box"></div>
+                    <div class="empty-box"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-copyright">
+            کپی رایت آکادمی سامان | تمامی حقوق مربوط به این سایت محفوظ است.
+            <span>۱۴۰۵ ©</span>
+        </div>
+    </footer>
+
+
+    <!-- ================================================================
+         SCRIPTS
+         Lenis must load before main.js (global dependency for animations.js).
+         main.js uses ES modules so its imports are resolved by the browser.
+         ================================================================ -->
+    <script src="https://unpkg.com/lenis@1.1.2/dist/lenis.min.js"></script>
+    <script type="module" src="js/main.js"></script>
+
+</body>
+</html>

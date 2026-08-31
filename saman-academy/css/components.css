@@ -1,0 +1,78 @@
+/*
+ * ============================================================
+ * SHARED COMPONENTS
+ * Reusable UI elements: buttons.
+ * Add future shared components (modals, badges, etc.) here.
+ * ============================================================
+ */
+
+/* ---- Primary CTA Button (Burgundy Gradient) ---- */
+.btn-cta {
+    background: linear-gradient(135deg, var(--grad-btn-start), var(--grad-btn-end));
+    color: #FFFFFF;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 30px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 8px 20px rgba(93, 13, 24, 0.3);
+}
+.btn-cta:hover {
+    box-shadow: 0 12px 25px rgba(93, 13, 24, 0.45);
+    transform: translateY(-2px);
+}
+
+/* ---- Outline Variant (used in header & hero) ---- */
+.btn-outline {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    color: var(--primary-navy);
+    border: 1px solid var(--neutral-border);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+}
+.btn-outline:hover {
+    background: #FFFFFF;
+    color: var(--accent-gold);
+    border-color: var(--accent-gold);
+}
+
+/* ---- Dark Navy Reserve Button (used in info cards) ---- */
+.btn-dark-reserve {
+    background: linear-gradient(135deg, var(--primary-navy), #0F172A);
+    color: #FFFFFF;
+    font-family: var(--font-display-fa);
+    font-size: 20px;
+    font-weight: 800;
+    padding: 16px 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 100px;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 10px 25px rgba(26, 54, 93, 0.3);
+    transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+.btn-dark-reserve::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+}
+.btn-dark-reserve:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 15px 35px rgba(93, 13, 24, 0.4);
+    border-color: var(--accent-gold);
+}
+.btn-dark-reserve:hover::after { left: 200%; }

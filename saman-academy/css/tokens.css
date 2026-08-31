@@ -1,0 +1,56 @@
+/*
+ * ============================================================
+ * DESIGN TOKENS
+ * Global CSS custom properties (variables) for the entire site.
+ * Change a value here to update it everywhere.
+ * ============================================================
+ */
+
+/* --- Fonts --- */
+@font-face { font-family: 'Kalameh'; src: url('../assets/fonts/Kalameh-Thin.ttf') format('truetype'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Kalameh'; src: url('../assets/fonts/Kalameh-ExtraLight.ttf') format('truetype'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Kalameh'; src: url('../assets/fonts/Kalameh-Light.ttf') format('truetype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Kalameh'; src: url('../assets/fonts/Kalameh-Regular.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Kalameh'; src: url('../assets/fonts/Kalameh-Medium.ttf') format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Kalameh'; src: url('../assets/fonts/Kalameh-SemiBold.ttf') format('truetype'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Kalameh'; src: url('../assets/fonts/Kalameh-Bold.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Kalameh'; src: url('../assets/fonts/Kalameh-ExtraBold.ttf') format('truetype'); font-weight: 800; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Kalameh'; src: url('../assets/fonts/Kalameh-Black.ttf') format('truetype'); font-weight: 900; font-style: normal; font-display: swap; }
+
+:root {
+    /* ---- Color Palette ---- */
+    --primary-navy:      #1A365D;   /* Deep luxury navy */
+    --primary-navy-dark: #0F172A;   /* Very dark navy for footer / dark sections */
+    --bg-base:           #FFFFFF;
+    --neutral-border:    #E2E8F0;
+    --neutral-soft-bg:   #F8FAFC;
+    --accent-gold:       #5D0D18;   /* Regal burgundy */
+    --accent-gold-hover: #821D2A;
+
+    /* ---- Text ---- */
+    --ink:      #1A365D;
+    --ink-soft: #64748B;
+
+    /* ---- Button Gradient ---- */
+    --grad-btn-start: #821D2A;
+    --grad-btn-end:   #5D0D18;
+
+    /* ---- Glassmorphism ---- */
+    --glass-bg:           rgba(255, 255, 255, 0.75);
+    --glass-bg-hover:     rgba(255, 255, 255, 0.95);
+    --glass-border:       rgba(226, 232, 240, 0.8);
+    --glass-border-highlight: rgba(255, 255, 255, 1);
+    --glass-shadow:       0 10px 30px 0 rgba(26, 54, 93, 0.06);
+    --glass-shadow-hover: 0 15px 40px 0 rgba(26, 54, 93, 0.12);
+
+    /* ---- Typography ---- */
+    --font-body:         'Kalameh', sans-serif;
+    --font-display-fa:   'Kalameh', sans-serif;
+    --font-display-latin:'Fraunces', Georgia, serif;
+    --font-mono:         'JetBrains Mono', monospace;
+
+    /* ---- Border Radii ---- */
+    --radius-sm: 16px;
+    --radius-md: 24px;
+    --radius-lg: 40px;
+}

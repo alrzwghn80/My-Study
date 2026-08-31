@@ -1,0 +1,136 @@
+/*
+ * ============================================================
+ * RESPONSIVE OVERRIDES
+ * All media queries in one place, ordered from largest to smallest.
+ * ============================================================
+ */
+
+/* ---- ≤ 1400px ---- */
+@media (max-width: 1400px) {
+    .hero-title       { font-size: 26px; }
+    .hero-description { font-size: 13.5px; }
+}
+
+/* ---- ≤ 1200px ---- */
+@media (max-width: 1200px) {
+    .features-section { grid-template-columns: repeat(2, 1fr); }
+    .glass-3d-icon    { display: none; }
+    .self-study-card,
+    .online-class-card { padding-left: 280px !important; }
+}
+
+/* ---- ≤ 991px (Tablet / small laptop) ---- */
+@media (max-width: 991px) {
+    /* Header */
+    .site-header        { width: calc(100% - 32px); height: 64px; top: 16px; padding: 0 8px 0 16px; }
+    .logo-container     { padding-right: 12px; }
+    .logo-main          { font-size: 15px; }
+    .logo-sub           { font-size: 9px; }
+    .header-left        { gap: 16px; }
+    .nav-link           { font-size: 13px; padding: 6px 12px; }
+    .header-actions .btn-cta { padding: 8px 18px; font-size: 12px; }
+
+    /* Hero — disables GSAP scroll transformation on small screens */
+    .hero-scroll-track    { height: auto !important; margin-bottom: -15px; margin-top: 120px; }
+    .hero-section         { height: auto; min-height: auto; padding: 0 20px; }
+    .hero-visual-card     { width: 100%; height: auto; max-height: none; padding: 30px; display: flex; flex-direction: column; gap: 30px; position: relative; top: auto; left: auto; transform: none; border-radius: var(--radius-md) !important; }
+    .unified-poster-container { position: relative; width: 100% !important; height: 350px !important; right: auto; top: auto; border-radius: var(--radius-md) !important; }
+    .hero-content-panel   { position: relative; width: 100% !important; left: auto; top: auto; transform: none; opacity: 1; pointer-events: auto; text-align: right; }
+
+    /* Sections */
+    .features-section { grid-template-columns: 1fr; }
+    .info-card        { padding: 35px 25px; min-height: auto; flex-direction: column; }
+    .info-content-left { display: none; }
+
+    /* Placement banner */
+    .placement-card          { flex-direction: column; text-align: center; padding: 40px 25px; }
+    .placement-content-right { align-items: center; }
+    .placement-title-img     { max-width: 320px; }
+    .placement-subtitle      { text-align: center; }
+
+    /* Online class card */
+    .online-class-card {
+        padding: 40px 30px 0 30px !important;
+        flex-direction: column !important;
+        min-height: auto !important;
+        position: relative;
+    }
+    .online-class-card .info-title    { font-size: 28px; }
+    .online-class-card .info-subtitle { font-size: 16px; margin-bottom: 5px; }
+    .online-class-card .info-body-container.online-class-body {
+        flex-direction: column; align-items: center; text-align: center; gap: 15px;
+    }
+    .online-class-card .online-class-action {
+        position: absolute; bottom: 60px; right: 30px; margin-top: 0; z-index: 10;
+    }
+    .online-class-card .online-kid-wrapper {
+        position: relative; height: 250px; left: auto; bottom: 0; margin-top: 20px; justify-content: flex-end; width: 100%; z-index: 20;
+    }
+
+    /* Self-study card */
+    .self-study-card {
+        padding: 40px 30px 0 30px !important;
+        flex-direction: column !important;
+        min-height: auto !important;
+        position: relative;
+    }
+    .self-study-card .info-title    { font-size: 28px; }
+    .self-study-card .info-subtitle { font-size: 16px; margin-bottom: 5px; }
+    .self-study-card .info-body-container.self-study-body {
+        flex-direction: column; align-items: center; text-align: center; gap: 15px;
+    }
+    .self-study-card .self-study-action {
+        position: absolute; bottom: 60px; right: 30px; margin-top: 0; padding-right: 0; z-index: 10;
+    }
+    .self-study-card .kid-image-wrapper {
+        position: relative; height: 220px; left: auto; bottom: 0; margin-top: 20px; justify-content: flex-end; width: 100%; z-index: 20;
+    }
+
+    /* Footer */
+    .footer-container { flex-direction: column; }
+    .footer-right, .footer-left { width: 100%; }
+    .footer-right      { flex-direction: row; justify-content: space-between; gap: 12px; }
+    .footer-btn        { flex: 1; font-size: 16px; padding: 12px 5px; white-space: nowrap; }
+    .footer-empty-boxes { justify-content: space-between; }
+    .empty-box         { width: 30%; }
+}
+
+/* ---- ≤ 768px (Mobile) ---- */
+@media (max-width: 768px) {
+    /* Show hamburger, hide desktop nav / actions */
+    .main-nav         { display: none; }
+    .header-actions   { display: none; }
+    .mobile-menu-btn  { display: flex; }
+
+    .logo-sub         { display: none; }
+    .logo-container   { justify-content: center; height: 100%; }
+    .logo-main        { font-size: 14px; margin: 0; }
+    .site-header      { padding: 0 8px 0 20px; }
+
+    .level-img-box    { width: 130px; height: 180px; }
+
+    /* Online class card (mobile) */
+    .online-class-card                   { padding: 30px 20px 0 20px !important; }
+    .online-class-card .online-kid-wrapper { height: 260px !important; margin-top: -30px; bottom: 0; left: -20px; justify-content: flex-end; }
+    .online-class-card .info-body-text   { font-size: 15px; line-height: 1.8; }
+    .online-class-card .online-class-action { height: auto; bottom: 35px; right: 20px; }
+
+    /* Self-study card (mobile) */
+    .self-study-card                  { padding: 30px 20px 0 20px !important; }
+    .self-study-card .kid-image-wrapper { height: 240px !important; margin-top: -30px; bottom: 0; left: -20px; justify-content: flex-end; }
+    .self-study-card .info-body-text  { font-size: 15px; line-height: 1.8; }
+    .self-study-card .self-study-action { height: auto; bottom: 35px; right: 20px; }
+
+    /* Reserve button inside cards */
+    .btn-dark-reserve { padding: 12px 20px; font-size: 15px; }
+
+    /* Footer buttons (mobile) */
+    .footer-right { gap: 8px; }
+    .footer-btn   { font-size: 14px; padding: 10px 5px; border-radius: 10px; }
+}
+
+/* ---- Touch devices: show feature content without hover ---- */
+@media (hover: none) {
+    .feature-title   { top: 25px; right: 25px; transform: translate(0, 0); font-size: 16px; }
+    .feature-content { opacity: 1; transform: translateY(0); }
+}
