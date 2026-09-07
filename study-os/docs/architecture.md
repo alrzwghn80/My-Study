@@ -23,10 +23,10 @@ study-os/
 │   └── migrations/
 ├── prisma.config.ts        # Migrate CLI's connection config (not read at runtime)
 ├── src/
-│   ├── app/                 # Routes: dashboard (/), analytics, history, goals, settings
+│   ├── app/                 # Routes: study (/), history, settings — see docs/product-spec.md §UI Redesign
 │   ├── server/
 │   │   ├── db/client.ts     # PrismaClient singleton, wired with the pg driver adapter
-│   │   ├── domain/          # Pure logic: timer FSM, streaks, records, analytics formulas
+│   │   ├── domain/          # Pure logic: timer FSM, streaks, records, analytics formulas (some now UI-unused, kept — see product-spec.md)
 │   │   ├── actions/         # Server Actions — the only way the client mutates data
 │   │   └── auth.ts          # NextAuth config
 │   ├── components/          # React components, organized by feature not by type

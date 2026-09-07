@@ -27,14 +27,14 @@ async function main() {
   await page.fill("#password", PASSWORD);
   await page.click('button[type="submit"]');
   await page.waitForURL(`${BASE}/`, { timeout: 10000 });
-  log("Logged in, on dashboard");
+  log("Logged in, on Study page");
 
-  await page.waitForSelector("text=Start Studying", { timeout: 10000 });
-  log("Start Studying button visible");
+  await page.waitForSelector("text=Start studying", { timeout: 10000 });
+  log("Start studying button visible");
 
-  await page.click("text=Start Studying");
+  await page.click("text=Start studying");
   await page.waitForSelector("text=Pause", { timeout: 10000 });
-  log("Session started — Pause button visible");
+  log("Session started — focused overlay visible with Pause button");
 
   await page.waitForTimeout(2200);
   const clockText1 = await page.textContent('[aria-live="polite"]');
@@ -49,22 +49,17 @@ async function main() {
   await page.waitForSelector("text=Pause", { timeout: 10000 });
   log("Resumed — Pause button visible again");
 
-  await page.click("text=Complete");
-  await page.waitForSelector("text=Session complete", { timeout: 10000 });
-  log("Review modal opened");
+  await page.click("text=Finish");
+  await page.waitForSelector("text=recorded", { timeout: 10000 });
+  log("Completion confirmation shown");
 
-  await page.selectOption("#review-category", { label: "Grammar" });
-  await page.click('button:has-text("4")').catch(() => {}); // productivity rating, best-effort
-  await page.fill("#review-notes", "e2e smoke test session");
-  await page.click("text=Save Session");
-  await page.waitForSelector("text=Session complete", { state: "detached", timeout: 10000 });
-  log("Review saved, modal closed");
-
-  await page.waitForSelector("text=Start Studying", { timeout: 10000 });
-  log("Back to idle — Start Studying visible again");
+  await page.waitForSelector("text=Start studying", { timeout: 10000 });
+  log("Back to idle — Start studying visible again, overlay dismissed");
 
   await page.goto(`${BASE}/history`);
-  await page.waitForSelector("li:has-text('Grammar')", { timeout: 10000 });
+  await page.waitForSelector("text=All sessions", { timeout: 10000 });
+  const historyBody = await page.textContent("body");
+  if (!/\d+[hm]/.test(historyBody)) throw new Error("History page shows no recorded duration");
   log("History page shows the completed session");
 
   if (consoleErrors.length > 0) {

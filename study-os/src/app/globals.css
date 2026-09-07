@@ -32,14 +32,6 @@
 
   --color-focus-ring: #2f6f4f;
 
-  /* Heatmap intensity scale (0..5), spec §17 */
-  --color-heat-0: #edede8;
-  --color-heat-1: #cfe3d5;
-  --color-heat-2: #a3cbb0;
-  --color-heat-3: #74b189;
-  --color-heat-4: #4b9367;
-  --color-heat-5: #2f6f4f;
-
   --shadow-sm: 0 1px 2px rgba(20, 20, 15, 0.06);
   --shadow-md: 0 4px 16px rgba(20, 20, 15, 0.08);
 
@@ -79,13 +71,6 @@
 
     --color-focus-ring: #5fb789;
 
-    --color-heat-0: #24262b;
-    --color-heat-1: #1e3226;
-    --color-heat-2: #204a34;
-    --color-heat-3: #256341;
-    --color-heat-4: #2f8558;
-    --color-heat-5: #5fb789;
-
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
   }
@@ -117,13 +102,6 @@
   --color-danger-soft: #3a1e1c;
 
   --color-focus-ring: #5fb789;
-
-  --color-heat-0: #24262b;
-  --color-heat-1: #1e3226;
-  --color-heat-2: #204a34;
-  --color-heat-3: #256341;
-  --color-heat-4: #2f8558;
-  --color-heat-5: #5fb789;
 
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);

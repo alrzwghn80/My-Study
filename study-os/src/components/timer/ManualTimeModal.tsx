@@ -3,25 +3,19 @@
 import { useState, useTransition } from "react";
 import { Modal } from "@/components/ui/Modal";
 import { addManualTimeAction, editManualTimeAction } from "@/server/actions/manual-entry";
-import { CategorySelect } from "./CategorySelect";
-import type { CategoryOption } from "./types";
 
 export interface ManualTimeInitial {
   sessionId: string;
   date: string;
   durationMinutes: number;
-  categoryId: string | null;
-  notes: string | null;
 }
 
 export function ManualTimeModal({
-  categories,
   today,
   initial,
   onClose,
   onSaved,
 }: {
-  categories: CategoryOption[];
   today: string;
   initial?: ManualTimeInitial;
   onClose: () => void;
@@ -29,20 +23,13 @@ export function ManualTimeModal({
 }) {
   const [date, setDate] = useState(initial?.date ?? today);
   const [durationMinutes, setDurationMinutes] = useState(initial?.durationMinutes ?? 30);
-  const [categoryId, setCategoryId] = useState(initial?.categoryId ?? "");
-  const [notes, setNotes] = useState(initial?.notes ?? "");
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
 
   const save = () => {
     setError(null);
     startTransition(async () => {
-      const input = {
-        date,
-        durationMinutes,
-        categoryId: categoryId || null,
-        notes: notes.trim() || null,
-      };
+      const input = { date, durationMinutes };
       const result = initial
         ? await editManualTimeAction(initial.sessionId, input)
         : await addManualTimeAction(input);
@@ -56,7 +43,7 @@ export function ManualTimeModal({
   };
 
   return (
-    <Modal title={initial ? "Edit Study Time" : "Add Study Time"} onClose={onClose}>
+    <Modal title={initial ? "Edit time" : "Add study time"} onClose={onClose}>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="manual-date" className="text-sm font-medium text-[var(--color-text)]">
@@ -83,28 +70,6 @@ export function ManualTimeModal({
             step={1}
             value={durationMinutes}
             onChange={(e) => setDurationMinutes(Number(e.target.value))}
-            className="rounded-[var(--radius-sm)] border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text)] outline-none focus-visible:border-[var(--color-primary)]"
-          />
-        </div>
-
-        <CategorySelect
-          id="manual-category"
-          name="categoryId"
-          categories={categories}
-          value={categoryId}
-          onChange={setCategoryId}
-        />
-
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="manual-notes" className="text-sm font-medium text-[var(--color-text)]">
-            Description
-          </label>
-          <input
-            id="manual-notes"
-            type="text"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            placeholder="Chapter 7 exercises"
             className="rounded-[var(--radius-sm)] border border-[var(--color-border-strong)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text)] outline-none focus-visible:border-[var(--color-primary)]"
           />
         </div>

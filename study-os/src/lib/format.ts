@@ -31,26 +31,12 @@ export function formatClock(totalSeconds: number): string {
   return `${pad(h)}:${pad(m)}:${pad(s)}`;
 }
 
-export function formatPercent(fraction: number): string {
-  return `${Math.round(fraction * 100)}%`;
-}
-
-export function formatSignedPercent(fraction: number): string {
-  const pct = Math.round(fraction * 100);
-  return `${pct >= 0 ? "+" : ""}${pct}%`;
-}
-
 const DATE_FORMATTER = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" });
-const DATE_SHORT_FORMATTER = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 const WEEKDAY_FORMATTER = new Intl.DateTimeFormat("en-US", { weekday: "long", timeZone: "UTC" });
 
 /** `date` must be a plain local-calendar-date Date (UTC-midnight) — see domain/calendar.ts. */
 export function formatLocalDate(date: Date): string {
   return DATE_FORMATTER.format(date);
-}
-
-export function formatLocalDateShort(date: Date): string {
-  return DATE_SHORT_FORMATTER.format(date);
 }
 
 export function formatWeekday(date: Date): string {

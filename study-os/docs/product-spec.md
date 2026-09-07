@@ -8,15 +8,27 @@ A private, single-user study-tracking platform whose purpose is to make German s
 
 Motivation comes from measurable progress, visible consistency, personal records, and honest data — not gamification. See `analytics.md`'s "no fake precision" and "neglected skill" sections for how this constrains even the copy.
 
-## Pages
+## Pages (post-simplification — see §UI Redesign below)
 
-- **Dashboard** (`/`) — timer, today's goal progress, streak, weekly progress, records, activity calendar, analytics summary. Priority order for what's visible without scrolling: timer → today's progress → streak → next action → weekly progress → records → calendar → analytics summary (spec §53).
-- **Analytics** (`/analytics`) — weekly/monthly/yearly breakdowns, category/skill distribution, consistency.
-- **History** (`/history`) — full session list with filters (date range, category, tracked/manual, completed/cancelled, min duration) and search over notes.
-- **Goals** (`/goals`) — daily/weekly/monthly targets (minimum/target/stretch) and the long-term goal.
-- **Settings** (`/settings`) — timezone, targets, timer behavior, motivation thresholds, appearance.
+- **Study** (`/`) — the whole app, effectively. Idle: today's total, one Start button, a 7-day chart, last few sessions. Active/paused/recovering: a full-screen focused overlay — huge clock, Pause/Finish, a quiet Discard link. Nothing else.
+- **History** (`/history`) — a 30-day chart plus a flat, unfiltered, paginated list of past sessions (edit/delete for manual entries), and the manual "+ Add time" entry point.
+- **Settings** (`/settings`) — timezone, appearance, export, sign out. Nothing configurable beyond that.
 
-No other pages. No teams, social feed, public profile, or multi-tenant billing (spec §35).
+No teams, social feed, public profile, or multi-tenant billing (spec §35). As of the simplification pass below, also no separate Analytics or Goals pages, no category/skill picker, no session-review form, no achievements, no notification settings.
+
+## UI Redesign: radical simplification
+
+The original build (see the phase history further down) implemented the full 97-section spec's UI surface — goal levels, streaks, records, category/skill distribution, a GitHub-style heatmap, session review ratings, notification settings, and more. A later request asked for the opposite: strip the product down to "a beautiful personal German study timer with simple progress tracking," ruthlessly, choosing simplicity over features/information/controls wherever they conflict.
+
+This was a **UI-only** change. Nothing in `src/server/domain/`, `prisma/schema.prisma`, or the timer state machine was touched — the redesign is entirely about which pages/components exist and what they render, not about correctness, data integrity, or the underlying data model. See `architecture.md` for what stayed load-bearing.
+
+**Removed from the UI** (components deleted; the Server Actions and domain functions behind them were not — see below): the Analytics page and every chart/card on it (category distribution, monthly bars); the Goals page and its minimum/target/stretch editors and long-term-goal form; the dashboard's streak card, today's-goal progress bar, record-chasing card, weekly-comparison card, GitHub heatmap, and analytics-summary card; the category/skill picker (on start, on manual entry, and — since the whole review step is gone — nowhere); the session-review modal (productivity/difficulty ratings, notes); the category manager and the browser-notification/sound/auto-break settings; History's date-range/category/source/status/min-duration filters and its notes search; the day-detail chronological interval timeline.
+
+**Kept, and now the entire product surface:** start/pause/resume/finish/discard a session; the always-live, timestamp-derived timer display; multi-tab safety and the RECOVERABLE-state prompt (both fully intact, just restyled); manual time entry (date + duration only now); a 7-day chart on Study and a 30-day chart on History; a flat session list with simple paging; timezone + light/dark appearance + a one-click JSON export; sign-in/sign-out.
+
+**Backend surface now unused by the UI but deliberately not deleted** (per the redesign brief's explicit instruction not to destroy domain functionality just because the UI stopped calling it): `src/server/domain/goals.ts` and `src/server/actions/goals.ts` (goal versioning, long-term-goal pace/estimate — no UI writes or reads a goal anymore); `src/server/domain/records.ts` (personal records — no longer surfaced); the category/skill side of `src/server/domain/analytics.ts` (`getCategoryDistribution`, `findNeglectedCategory`) and `src/server/actions/categories.ts`; `saveReviewAction` and `updateSessionReview` (nothing sets a rating/note anymore, but editing one directly against the database, or through a future UI, still works and is still tested); `exportCsvAction`/`importJsonAction` (JSON export is the only one wired to a button; CSV export and import have no UI entry point). All of this remains covered by the existing test suite, which exercises the domain layer directly rather than through pages. If any of it should come back later (or be deleted for real), it's this paragraph that should change first.
+
+**Why this is safe:** `StudySession.categoryId`, `productivityRating`, `difficultyRating`, and `notes` are all nullable columns — sessions created through the simplified UI simply leave them null; no migration was needed. Goal rows, achievements-style thresholds, and category rows already in the database are untouched and still exportable. Nothing about the timer FSM, the interval-splitting/timezone logic, the multi-tab token, or the recovery heartbeat changed at all.
 
 ## Resolved ambiguities (spec §95 — flagged, not silently decided)
 

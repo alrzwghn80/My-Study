@@ -16,29 +16,30 @@ export function RecoveryPrompt({
   onEnd: () => void;
 }) {
   return (
-    <div className="rounded-[var(--radius-lg)] border border-[var(--color-warning)] bg-[var(--color-warning-soft)] p-5">
-      <h3 className="mb-1 text-sm font-semibold text-[var(--color-text)]">An unfinished session was detected</h3>
-      <p className="mb-4 text-sm text-[var(--color-text-muted)]">
-        Last activity was at {formatTimeInZone(lastKnownGoodAt, timezone)} — {formatDurationLong(gapSeconds)} ago.
-        This can happen if your computer slept or the tab closed. Resuming will continue timing from now; ending
-        the session credits time only up to that last activity.
-      </p>
-      <div className="flex flex-wrap gap-2">
+    <div className="flex max-w-sm flex-col items-center gap-6 text-center">
+      <div>
+        <h2 className="text-lg font-medium text-[var(--color-text)]">Still there?</h2>
+        <p className="mt-2 text-sm text-[var(--color-text-muted)]">
+          Your last activity was at {formatTimeInZone(lastKnownGoodAt, timezone)}, {formatDurationLong(gapSeconds)}{" "}
+          ago — likely your computer slept or the tab closed.
+        </p>
+      </div>
+      <div className="flex flex-col gap-3 sm:flex-row">
         <button
           type="button"
           onClick={onResume}
           disabled={pending}
-          className="rounded-[var(--radius-sm)] bg-[var(--color-primary)] px-4 py-2 text-sm font-medium text-[var(--color-primary-fg)] hover:bg-[var(--color-primary-hover)] disabled:opacity-60"
+          className="rounded-full bg-[var(--color-primary)] px-6 py-2.5 text-sm font-medium text-[var(--color-primary-fg)] hover:bg-[var(--color-primary-hover)] disabled:opacity-60"
         >
-          Resume
+          Keep going
         </button>
         <button
           type="button"
           onClick={onEnd}
           disabled={pending}
-          className="rounded-[var(--radius-sm)] border border-[var(--color-border-strong)] px-4 py-2 text-sm font-medium text-[var(--color-text)] hover:bg-[var(--color-surface)] disabled:opacity-60"
+          className="rounded-full px-6 py-2.5 text-sm font-medium text-[var(--color-text-muted)] hover:text-[var(--color-text)] disabled:opacity-60"
         >
-          End Session at {formatTimeInZone(lastKnownGoodAt, timezone)}
+          End at {formatTimeInZone(lastKnownGoodAt, timezone)}
         </button>
       </div>
     </div>

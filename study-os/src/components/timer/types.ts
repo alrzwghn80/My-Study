@@ -11,9 +11,3 @@ export interface ActiveSessionData {
   createdAt: Date;
   intervals: { id: string; type: IntervalType; startedAt: Date }[];
 }
-
-export interface CategoryOption {
-  id: string;
-  name: string;
-  color: string;
-}

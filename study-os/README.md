@@ -42,7 +42,7 @@ sudo -u postgres psql -c "CREATE DATABASE study_os OWNER studyos;"
 Not part of the automated suite — small Playwright scripts used to verify the UI in a real browser during development, kept around for future manual QA:
 
 - `node scripts/e2e-smoke.mjs` — logs in and walks the full timer flow (start → live countdown → pause → resume → complete → review → history), failing on any browser console error.
-- `node scripts/screenshot.mjs <path> <width> <height> <outFile>` — logs in and saves a full-page screenshot of any route, e.g. `node scripts/screenshot.mjs /analytics 390 900 /tmp/analytics-mobile.png` for a quick responsive check.
+- `node scripts/screenshot.mjs <path> <width> <height> <outFile>` — logs in and saves a full-page screenshot of any route, e.g. `node scripts/screenshot.mjs /history 390 900 /tmp/history-mobile.png` for a quick responsive check.
 
 Both require the dev server running on :3000 and Chromium at `/opt/pw-browsers/chromium-*/chrome-linux/chrome` (adjust the `executablePath` in each script if your Playwright browser cache lives elsewhere — run `npx playwright install chromium` if you don't have one).
 
