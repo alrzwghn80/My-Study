@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { localCalendarDate, splitIntervalAtLocalMidnight, startOfNextLocalDay } from "@/server/domain/timezone";
+import {
+  localCalendarDate,
+  splitIntervalAtLocalMidnight,
+  startOfNextLocalDay,
+  zonedTimeToInstant,
+} from "@/server/domain/timezone";
 
 describe("localCalendarDate", () => {
   it("matches the UTC date when timeZone is UTC", () => {
@@ -48,6 +53,22 @@ describe("startOfNextLocalDay", () => {
     const startOfMar8 = new Date("2026-03-08T05:00:00.000Z");
     const next = startOfNextLocalDay(startOfMar8, "America/New_York");
     expect(next.toISOString()).toBe("2026-03-09T04:00:00.000Z");
+  });
+});
+
+describe("zonedTimeToInstant", () => {
+  it("resolves local noon to the correct UTC instant", () => {
+    const instant = zonedTimeToInstant(new Date("2026-01-15T00:00:00.000Z"), 12, 0, "Europe/Berlin");
+    // Berlin is UTC+1 in January, so 12:00 local = 11:00 UTC.
+    expect(instant.toISOString()).toBe("2026-01-15T11:00:00.000Z");
+  });
+
+  it("round-trips with localCalendarDate for a noon anchor (never lands on the wrong day)", () => {
+    for (const tz of ["UTC", "Pacific/Kiritimati", "Etc/GMT+12", "Asia/Kolkata"]) {
+      const date = new Date("2026-06-15T00:00:00.000Z");
+      const noon = zonedTimeToInstant(date, 12, 0, tz);
+      expect(localCalendarDate(noon, tz).toISOString()).toBe(date.toISOString());
+    }
   });
 });
 

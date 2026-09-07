@@ -11,7 +11,7 @@
  * a value that, when read with `getUTC*` accessors, gives the wall-clock
  * date/time in `timeZone` at that instant.
  */
-function tzOffsetMinutes(instant: Date, timeZone: string): number {
+export function tzOffsetMinutes(instant: Date, timeZone: string): number {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone,
     hourCycle: "h23",
@@ -55,6 +55,25 @@ export function startOfNextLocalDay(instant: Date, timeZone: string): Date {
   const estimate = new Date(nextWallMidnightMs - offset * 60_000);
   const refinedOffset = tzOffsetMinutes(estimate, timeZone);
   return new Date(nextWallMidnightMs - refinedOffset * 60_000);
+}
+
+/**
+ * The UTC instant of `hour:minute` wall-clock time on the given local
+ * calendar date, in `timeZone`. Used to anchor manual time entries at local
+ * noon — safely away from any midnight boundary regardless of timezone.
+ */
+export function zonedTimeToInstant(localDate: Date, hour: number, minute: number, timeZone: string): Date {
+  const wallMs = Date.UTC(
+    localDate.getUTCFullYear(),
+    localDate.getUTCMonth(),
+    localDate.getUTCDate(),
+    hour,
+    minute,
+  );
+  const roughOffset = tzOffsetMinutes(new Date(wallMs), timeZone);
+  const estimate = new Date(wallMs - roughOffset * 60_000);
+  const refinedOffset = tzOffsetMinutes(estimate, timeZone);
+  return new Date(wallMs - refinedOffset * 60_000);
 }
 
 export interface IntervalPiece {
