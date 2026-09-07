@@ -1,0 +1,242 @@
+// Personal German Study OS — database schema
+// See /docs/database.md for the full rationale behind every table, the
+// interval-splitting policy, and why records/aggregates are never stored.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── Auth ─────────────────────────────────────────────────────────────────
+// Single-user app: exactly one row will ever exist. Kept as a real table
+// (rather than an env-var login) so a second user could be added later
+// without a schema migration — see docs/database.md §Auth.
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  settings      Settings?
+  categories    Category[]
+  sessions      StudySession[]
+  goals         Goal[]
+  longTermGoals LongTermGoal[]
+  achievements  Achievement[]
+}
+
+// ── Settings (singleton per user) ───────────────────────────────────────
+model Settings {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  timezone String @default("UTC") // IANA name, e.g. "Europe/Berlin"
+
+  // Minimum focus seconds for a calendar day to count as a "study day".
+  // Drives streaks and consistency — see docs/database.md §Study Day.
+  streakThresholdSeconds Int @default(1800) // 30 minutes
+
+  theme                String  @default("system") // "light" | "dark" | "system"
+  reducedMotion        Boolean @default(false)
+  notificationsEnabled Boolean @default(false)
+  soundEnabled         Boolean @default(false)
+  autoStartBreakOnPause Boolean @default(false)
+
+  updatedAt DateTime @updatedAt
+}
+
+// ── Categories (doubles as "skill" — see docs/database.md §Category vs Skill) ─
+model Category {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  color      String // hex, used consistently across charts
+  isArchived Boolean  @default(false) // never hard-delete: history references it
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+
+  sessions StudySession[]
+
+  @@unique([userId, name])
+  @@index([userId, isArchived])
+}
+
+enum SessionStatus {
+  ACTIVE // "RUNNING" in the state-machine doc
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+enum SessionSource {
+  TRACKED
+  MANUAL
+}
+
+// ── Study Session (the container) ───────────────────────────────────────
+// Canonical focus/break time lives in SessionInterval, not here.
+// focusSeconds/breakSeconds/elapsedSeconds are a denormalized cache kept in
+// sync inside the same transaction as every state transition, and are fully
+// rebuildable from SessionInterval + SessionEvent — see docs/database.md.
+model StudySession {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  status SessionStatus
+  source SessionSource
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  startedAt   DateTime? // null only for a MANUAL entry with no known start time
+  completedAt DateTime?
+
+  // Denormalized totals, rebuildable from SessionInterval rows.
+  focusSeconds   Int @default(0)
+  breakSeconds   Int @default(0)
+  elapsedSeconds Int @default(0)
+
+  productivityRating Int? // 1-5
+  difficultyRating   Int? // 1-5
+  notes              String?
+
+  // Multi-tab coordination token — see docs/architecture.md §Multi-tab safety.
+  activeToken      String?
+  lastHeartbeatAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events    SessionEvent[]
+  intervals SessionInterval[]
+
+  @@index([userId, status])
+  @@index([userId, createdAt])
+  @@index([userId, source])
+}
+
+enum SessionEventType {
+  SESSION_CREATED
+  SESSION_STARTED
+  SESSION_PAUSED
+  SESSION_RESUMED
+  SESSION_COMPLETED
+  SESSION_CANCELLED
+  SESSION_RECOVERED
+  MANUAL_TIME_ADDED
+}
+
+// ── Session Event (append-only audit log) ───────────────────────────────
+// occurredAt is always a SERVER timestamp — never trust the client clock
+// for the historical record. clientTimestamp is stored purely for
+// debugging/recovery display, never used in a calculation.
+model SessionEvent {
+  id              String           @id @default(cuid())
+  sessionId       String
+  session         StudySession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  type            SessionEventType
+  occurredAt      DateTime         @default(now())
+  clientTimestamp DateTime?
+  metadata        Json?
+  createdAt       DateTime         @default(now())
+
+  @@index([sessionId, occurredAt])
+}
+
+enum IntervalType {
+  FOCUS
+  BREAK
+}
+
+// ── Session Interval (canonical time-accounting unit) ───────────────────
+// One row per uninterrupted focus or break block, already split at every
+// local-midnight boundary so `localDate` is unambiguous and analytics is a
+// plain GROUP BY — see docs/database.md §Midnight-crossing sessions.
+model SessionInterval {
+  id        String       @id @default(cuid())
+  sessionId String
+  session   StudySession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  userId    String // denormalized for index-only aggregation queries
+
+  type    IntervalType
+  startedAt DateTime
+  endedAt   DateTime? // null only while this interval is the currently-open one
+  durationSeconds Int?     // set when endedAt is set
+
+  // Calendar date (in the timezone active at write time) this interval's
+  // time is attributed to. Rebuilt if the user changes timezone historically.
+  localDate DateTime @db.Date
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, localDate])
+  @@index([sessionId])
+}
+
+enum GoalPeriod {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+enum GoalLevel {
+  MINIMUM
+  TARGET
+  STRETCH
+}
+
+// ── Goals (versioned by effective date) ─────────────────────────────────
+// A new row is inserted whenever a target changes; the row with the latest
+// effectiveFrom <= the day being evaluated applies. This keeps past
+// "on track / behind" verdicts stable when you change your target today.
+// See docs/database.md §Goal versioning.
+model Goal {
+  id            String     @id @default(cuid())
+  userId        String
+  user          User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  period        GoalPeriod
+  level         GoalLevel
+  seconds       Int
+  effectiveFrom DateTime   @db.Date
+  createdAt     DateTime   @default(now())
+
+  @@unique([userId, period, level, effectiveFrom])
+  @@index([userId, period, effectiveFrom])
+}
+
+// ── Long-term goal (e.g. "German B2 — 500 hours") ───────────────────────
+model LongTermGoal {
+  id            String    @id @default(cuid())
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title         String
+  targetSeconds Int
+  targetDate    DateTime? @db.Date
+  startDate     DateTime  @db.Date
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([userId, isActive])
+}
+
+// ── Achievements (unlock timestamp is real data, can't be reconstructed
+// after the fact if thresholds ever change — see docs/database.md) ──────
+model Achievement {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type       String // e.g. "HOURS_100", "STREAK_30"
+  unlockedAt DateTime @default(now())
+  value      Int // metric value at unlock time (seconds or streak-days)
+
+  @@unique([userId, type])
+  @@index([userId])
+}
