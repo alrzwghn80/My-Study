@@ -2,12 +2,15 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/server/db/client";
+import { authConfig } from "./auth.config";
 
 // Single-user credentials auth (spec §35): no OAuth, no adapter tables — a
 // JWT session is self-contained and verified only against passwordHash.
+// This full config (with the DB-touching provider) must only be imported
+// from Node-runtime code (Server Components, Server Actions, the route
+// handler) — never from middleware.ts, which needs auth.config.ts instead.
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  session: { strategy: "jwt" },
-  pages: { signIn: "/login" },
+  ...authConfig,
   providers: [
     Credentials({
       credentials: {
@@ -29,16 +32,4 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
     }),
   ],
-  callbacks: {
-    jwt({ token, user }) {
-      if (user?.id) token.userId = user.id;
-      return token;
-    },
-    session({ session, token }) {
-      if (token.userId && typeof token.userId === "string") {
-        session.user.id = token.userId;
-      }
-      return session;
-    },
-  },
 });

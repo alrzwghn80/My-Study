@@ -35,17 +35,17 @@ Phases follow spec §86:
 - [x] Phase 1 — Repository inspection and architecture (this document set).
 - [x] Phase 2 — Database schema and migrations (`prisma/schema.prisma`, applied and verified against a local Postgres).
 - [x] Phase 3 — Session domain model **and** Phase 4 — Timer state machine (implemented together, per user direction): `src/server/domain/timezone.ts` (pure interval-splitting/DST-safe timezone math), `src/server/domain/timer/transitions.ts` (pure FSM table), `src/server/domain/timer/recovery.ts` (pure heartbeat-staleness gate), `src/server/domain/timer/session-service.ts` (start/pause/resume/complete/cancel/heartbeat/claim/recover/review, each atomic via `prisma.$transaction`). 61 tests (35 pure unit + 26 integration against a real disposable Postgres database), `tsc --noEmit` and `eslint` both clean. Two real bugs were caught and fixed by the integration tests before this was considered done — see git history on this phase's commit for what they were and why the fix is the way it is.
-- [ ] Phase 5 — Persistence and recovery (Server Actions + client wiring: heartbeat loop, `sessionStorage` token, `BroadcastChannel` multi-tab sync, the RECOVERABLE prompt UI)
-- [ ] Phase 6 — Dashboard
-- [ ] Phase 7 — Manual time entry
-- [ ] Phase 8 — History
-- [ ] Phase 9 — Goals
-- [ ] Phase 10 — Calendar heatmap
-- [ ] Phase 11 — Analytics
-- [ ] Phase 12 — Streaks and records
-- [ ] Phase 13 — Notifications/reminders
-- [ ] Phase 14 — Export/import
-- [ ] Phase 15 — Testing and edge cases
-- [ ] Phase 16 — UI polish and performance
+- [x] Phase 5 — Persistence and recovery: `src/server/actions/timer.ts` (thin auth-check-then-domain-call wrappers), `src/components/timer/useTimerSession.ts` (heartbeat loop, `sessionStorage` token, `BroadcastChannel` multi-tab sync, mount-time reconciliation), `RecoveryPrompt.tsx` for the RECOVERABLE state.
+- [x] Phase 6 — Dashboard (`src/app/(app)/page.tsx` + `src/components/dashboard/*`): timer, today's goal, streak, weekly progress, record-chasing card, activity heatmap, analytics summary — in that priority order per spec §53.
+- [x] Phase 7 — Manual time entry (`ManualTimeModal.tsx`, `src/server/actions/manual-entry.ts`), reachable from the dashboard and from each history row.
+- [x] Phase 8 — History (`src/app/(app)/history/page.tsx`): filters via URL search params (bookmarkable, no client state needed), notes search, expandable rows with edit/delete for manual entries, and day-detail mode (`?date=`) with the chronological focus/break timeline.
+- [x] Phase 9 — Goals (`src/app/(app)/goals/page.tsx`): daily/weekly/monthly minimum/target/stretch editors, long-term goal creation with live progress/pace/estimated-completion.
+- [x] Phase 10 — Calendar heatmap (`StudyCalendarHeatmap.tsx`), GitHub-style, linking each day into History's day-detail view.
+- [x] Phase 11 — Analytics (`src/app/(app)/analytics/page.tsx`): weekly/monthly/yearly breakdowns, category/skill distribution, the neglected-category note.
+- [x] Phase 12 — Streaks and records: surfaced on the dashboard (streak, record-chasing) and folded into analytics; all computed live per `docs/database.md`.
+- [x] Phase 13 — Notifications: real in-app browser Notifications (`GoalReminderNotifier.tsx`), scoped deliberately to "app open" rather than push/service-worker — see `architecture.md` §Notifications for why.
+- [x] Phase 14 — Export/import (`ExportImportPanel.tsx`, `src/server/actions/export-import.ts`): JSON + CSV export, additive JSON import.
+- [x] Phase 15 — Testing and edge cases: 105 Vitest tests (unit + integration against a disposable Postgres) plus a real-browser Playwright walk-through of the full timer → review → history flow (`scripts/e2e-smoke.mjs`) that caught and led to fixing a real duplicate-React-key bug in the heatmap before this was called done.
+- [x] Phase 16 — UI polish and performance: design tokens (light/dark), responsive nav (top bar / bottom tabs), `error.tsx`/`loading.tsx`/`not-found.tsx` boundaries, keyboard shortcuts (Space/Enter), `prefers-reduced-motion` support.
 
-Each phase is implemented, typechecked, linted, tested, and manually verified before the next begins (spec §87) — not accumulated unverified.
+Each phase was implemented, typechecked, linted, tested, and manually verified (in a real browser via Playwright, not just "it compiles") before being marked done here (spec §87).
