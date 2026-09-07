@@ -23,7 +23,7 @@ RECOVERABLE   A session was found ACTIVE or PAUSED on load, with a heartbeat
 | PAUSED | Resume | RUNNING | Close the open BREAK interval. Open a new FOCUS interval. Emit `SESSION_RESUMED`. Session id unchanged. |
 | RUNNING | Complete | COMPLETED | Close the open FOCUS interval. Set `completedAt = now`, `status = COMPLETED`. Emit `SESSION_COMPLETED`. Open the review modal (category/rating/notes). |
 | PAUSED | Complete | COMPLETED | Close the open BREAK interval (break time already recorded counts as break, not focus — see Data Definitions). Same as above otherwise. |
-| RUNNING | Cancel | CANCELLED | **Discard the entire session**: delete its `SessionInterval` rows (or mark them excluded — see decision below), set `status = CANCELLED`. Emit `SESSION_CANCELLED`. Counts toward nothing. |
+| RUNNING | Cancel | CANCELLED | **Discard the entire session**: delete its `SessionInterval` rows outright (not a soft-exclude flag), set `status = CANCELLED`, zero the denormalized totals. Emit `SESSION_CANCELLED` — the event log entry (and the fact a session existed) is kept for audit purposes even though its intervals are gone. Counts toward nothing. |
 | PAUSED | Cancel | CANCELLED | Same as above. |
 | IDLE | Add manual time | (no state change) | Creates a separate `StudySession{source: MANUAL, status: COMPLETED}` with one FOCUS interval spanning the given duration. Does not touch the timer state machine at all — manual entry is orthogonal to RUNNING/PAUSED. |
 | RUNNING/PAUSED (on page load) | Heartbeat gap > threshold | RECOVERABLE | No server mutation yet. Client shows: "Last activity at HH:MM — Resume / End Session". |

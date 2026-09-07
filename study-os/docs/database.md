@@ -48,6 +48,10 @@ The spec lists "German Study Categories" (§12: Grammar, Vocabulary, Listening, 
 
 §16 explicitly allows aggregate tables only if performance requires them and they're "safely rebuildable," and never as "the only source of truth." Given Postgres's indexing on `(userId, localDate)`, a full year of daily totals is a single indexed `GROUP BY` — fast enough that a cache table would add write-path complexity (keep it in sync on every interval close, every manual-entry edit, every deletion) for no measured benefit yet. Personal records (§22, §58) are the sharper case: "if I delete a session, records must update" is trivially, automatically true if a record is `MAX(...)` computed live, and requires active invalidation logic if it's a stored value. Computing live is the simpler design that can't go stale. If a specific query proves too slow under real data volume, the fix is `unstable_cache`/memoization at the query layer first, then a rebuildable materialized view — not a denormalized table treated as ground truth.
 
+## Why every analytics query can skip a status filter
+
+`SessionInterval` rows exist **only** for sessions that are currently ACTIVE/PAUSED or reached COMPLETED. Cancelling a session (see `timer-state-machine.md`) deletes its interval rows outright rather than flagging them excluded. This is what lets every formula in `analytics.md` query `SessionInterval` directly with no join back to `StudySession.status` — a cancelled session cannot contribute to any total by construction, not because every query remembers to filter it out.
+
 ## Achievements are the one exception
 
 `Achievement.unlockedAt` **is** persisted, deliberately, because it's not purely derivable: it's *when* a threshold was first crossed, and if the threshold list changes later (e.g. a 750-hour tier is added), there's no way to reconstruct historically when that would have unlocked without replaying the entire session history against the old threshold set. Persisting the unlock event is data, not a cache.

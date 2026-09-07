@@ -34,9 +34,8 @@ Phases follow spec §86:
 
 - [x] Phase 1 — Repository inspection and architecture (this document set).
 - [x] Phase 2 — Database schema and migrations (`prisma/schema.prisma`, applied and verified against a local Postgres).
-- [ ] Phase 3 — Session domain model
-- [ ] Phase 4 — Timer state machine (implementation, per `timer-state-machine.md`)
-- [ ] Phase 5 — Persistence and recovery
+- [x] Phase 3 — Session domain model **and** Phase 4 — Timer state machine (implemented together, per user direction): `src/server/domain/timezone.ts` (pure interval-splitting/DST-safe timezone math), `src/server/domain/timer/transitions.ts` (pure FSM table), `src/server/domain/timer/recovery.ts` (pure heartbeat-staleness gate), `src/server/domain/timer/session-service.ts` (start/pause/resume/complete/cancel/heartbeat/claim/recover/review, each atomic via `prisma.$transaction`). 61 tests (35 pure unit + 26 integration against a real disposable Postgres database), `tsc --noEmit` and `eslint` both clean. Two real bugs were caught and fixed by the integration tests before this was considered done — see git history on this phase's commit for what they were and why the fix is the way it is.
+- [ ] Phase 5 — Persistence and recovery (Server Actions + client wiring: heartbeat loop, `sessionStorage` token, `BroadcastChannel` multi-tab sync, the RECOVERABLE prompt UI)
 - [ ] Phase 6 — Dashboard
 - [ ] Phase 7 — Manual time entry
 - [ ] Phase 8 — History
